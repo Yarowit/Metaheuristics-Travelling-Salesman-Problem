@@ -391,66 +391,6 @@ void genetic(Graph* graph){
     std::cout<<"Najmniejszy wynik: "<<result<<std::endl;
 }
 
-std::tuple<std::vector<int>,std::vector<int>,int,int> PMXa(std::vector<int> parenta,std::vector<int> parenta2, std::vector<int> parentb,int index,int N,Graph* graph){
-    for(int i=index;i!=(index+N/2)%N; i=(i+1)%N){
-        int val = parentb[i];
-        *(std::find(parenta.begin(),parenta.end(),val)) = parenta[i];
-        parenta[i] = parentb[i];
-    }
-    int cost1 = graph->Distance[parenta[0]][parenta[graph->N - 1]];
-    for(int j=0;j<graph->N-1;j++){
-        cost1 += graph->Distance[parenta[j]][parenta[j+1]];
-    }
-
-
-    for(int i=index;i!=(index+N/2)%N; i=(i+1)%N){
-        int val = parenta2[i];
-        *(std::find(parentb.begin(),parentb.end(),val)) = parentb[i];
-        parentb[i] = parenta2[i];
-    }
-    int cost2 = graph->Distance[parentb[0]][parentb[graph->N - 1]];
-    for(int j=0;j<graph->N-1;j++){
-        cost2 += graph->Distance[parentb[j]][parentb[j+1]];
-    }
-
-    return {parenta,parentb,cost1,cost2};
-}
-
-std::tuple<std::vector<int>,std::vector<int>,int,int> OXa(std::vector<int> parenta,std::vector<int> parenta2, std::vector<int> parentb,int index,int N,Graph* graph){
-    std::set<int> taken;
-    std::vector<int> child1(N),child2(N);
-    for(int i=index;i!=(index+N/2)%N; i=(i+1)%N){
-        child1[i] = parentb[i];
-        taken.insert(parentb[i]);
-    }
-    int j = 0;
-    for(int i=(index+N/2)%N;i!=index; i=(i+1)%N){
-        if(taken.count(parenta[j])) j++;
-        child1[i] = parenta[j++];
-    }
-
-    int cost1 = graph->Distance[child1[0]][child1[graph->N - 1]];
-    for(int j=0;j<graph->N-1;j++){
-        cost1 += graph->Distance[child1[j]][child1[j+1]];
-    }
-    taken.clear();
-
-    for(int i=index;i!=(index+N/2)%N; i=(i+1)%N){
-        child2[i] = parenta[i];
-        taken.insert(parenta[i]);
-    }
-    j = 0;
-    for(int i=(index+N/2)%N;i!=index; i=(i+1)%N){
-        if(taken.count(parentb[j])) j++;
-        child2[i] = parentb[j++];
-    }
-    int cost2 = graph->Distance[child2[0]][child2[graph->N - 1]];
-    for(int j=0;j<graph->N-1;j++){
-        cost2 += graph->Distance[child2[j]][child2[j+1]];
-    }
-
-    return {child1,child2,cost1,cost2};
-}
 int calcCost(std::vector<int> parenta, Graph* graph){
     int cost1 = graph->Distance[parenta[0]][parenta[graph->N - 1]];
     for(int j=0;j<graph->N-1;j++){
